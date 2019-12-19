@@ -1,22 +1,26 @@
 /* eslint-disable no-console */
-const mysql = require('mysql');
+const { Pool, Client } = require('pg');
 const async = require('async');
 const db = require('../config/models.config.js');
 
-const connection = mysql.createConnection({
-  host: db.host,
+const client = new Client({
   user: db.user,
-  password: db.password,
+  host: db.host,
   database: db.database,
-});
+  password: db.password
+})
+client.connect()
 
-connection.connect();
+client.query('SELECT NOW()', (err, res) => {
+  console.log(err, res)
+  client.end()
+})
 
 module.exports = {
   users: (fakeUser) => {
     const queryVal = [fakeUser.name, fakeUser.image];
     const query = 'INSERT INTO users (name, image) VALUES(?, ?)';
-    connection.query(query, queryVal, (err, data) => {
+    client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);
       } else {
@@ -27,7 +31,7 @@ module.exports = {
   owners: (fakeData) => {
     const queryVal = [fakeData.name, fakeData.image];
     const query = 'INSERT INTO owners (name, image) VALUES(?, ?)';
-    connection.query(query, queryVal, (err, data) => {
+    client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);
       } else {
@@ -44,7 +48,7 @@ module.exports = {
 
     const query = 'INSERT INTO listings (title, avg_rating, communication, check_in, accuracy, value, cleanliness, location, hospitality, stylish,sparkling_clean, quick_responses, amazing_amenities, counts, owners_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-    connection.query(query, queryVal, (err, data) => {
+    client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);
       } else {
@@ -55,7 +59,7 @@ module.exports = {
   reviews: (fakeData) => {
     const queryVal = [fakeData.date, fakeData.review, fakeData.users_id, fakeData.listings_id];
     const query = 'INSERT INTO reviews (date, review, users_id, listings_id) VALUES(?, ?, ?, ?)';
-    connection.query(query, queryVal, (err, data) => {
+    client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);
       } else {
@@ -67,7 +71,7 @@ module.exports = {
     const queryVal = [fakeResponses.response,
       fakeResponses.date, fakeResponses.reviews_id, fakeResponses.owners_id];
     const query = 'INSERT INTO owners_responses (response, date, reviews_id, owners_id) VALUES(?, ?, ?, ?)';
-    connection.query(query, queryVal, (err, data) => {
+    client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);
       } else {
@@ -81,7 +85,7 @@ module.exports = {
     const returnedData = {};
 
     async.parallel([(parallelDone) => {
-      connection.query(query1, {}, (err, results) => {
+      client.query(query1, {}, (err, results) => {
         if (err) {
           parallelDone(err);
         }
@@ -89,7 +93,7 @@ module.exports = {
         parallelDone();
       });
     }, (parallelDone) => {
-      connection.query(query2, {}, (err, results) => {
+      client.query(query2, {}, (err, results) => {
         if (err) {
           parallelDone(err);
         }
