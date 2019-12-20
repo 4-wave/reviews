@@ -1,0 +1,51 @@
+{
+    listing: {
+        owner: String,
+        overallRatingAvg: Number,
+        communicationRatingAvg: Number,
+        checkInRatingAvg: Number,
+        accuracyRatingAvg: Number,
+        locationRatingAvg: Number,
+        valueRatingAvg: Number,
+        quickResponsesTotal: Number,
+        sparklingCleanTotal: Number,
+        amazingAmenitiesTotal: Number,
+        stylishTotal: Number,
+        hospitalTotal: Number,
+        count: Number,
+        reviews: []
+    },
+    review: {
+        date: Date,
+        review: String,
+        overallRating: Number,
+        cleanlinessRating: Number,
+        communicationRating: Number,
+        checkInRating: Number,
+        accuracyRating: Number,
+        valueRating: Number,
+        locationRating: Number,
+        quickResponses: Boolean,
+        sparklingClean: Boolean,
+        amazingAmenities: Boolean,
+        stylish: Boolean,
+        hospitality: Boolean,
+        userId: Number,
+        listingId: Number,
+        ownerResponseId: Number,
+    },
+    user: {
+        id: Number,
+        name: String
+    },
+
+    owner: {
+        id: Number,
+        name: String
+    },
+    
+    ownerResponse: {
+        id: Number,
+        text: String
+    }
+}
