@@ -3,98 +3,178 @@
 const faker = require('faker');
 const Models = require('../server/models.js');
 
-function users() {
-  for (let i = 0; i < 3000; i += 1) {
+const userNumber = 100;
+const ownerNumber = 80;
+const ownerResponseNumber = 20;
+const listingNumber = 2;
+const users = async () => {
+  await Models.deleteUsers();
+  for (let i = 0; i < userNumber; i += 1) {
     const randomName = faker.name.firstName();
     const randomImage = faker.image.avatar();
-    Models.users({ name: randomName, image: randomImage });
+    await Models.users({ name: randomName, image: randomImage }, idx = i);
+  }
+  // Models.db.end();
+};
+
+const owners = async () =>  {
+  await Models.deleteOwners();
+  for (let i = 0; i < ownerNumber; i += 1) {
+    const randomName = faker.name.firstName();
+    const randomImage = faker.image.avatar();
+    await Models.owners({ name: randomName, image: randomImage }, idx = i);
   }
 }
 
-function owners() {
-  for (let i = 0; i < 100; i += 1) {
-    const randomName = faker.name.firstName();
-    const randomImage = faker.image.avatar();
-    Models.owners({ name: randomName, image: randomImage });
-  }
-}
+// const reviews = () => {
+//   Models.deleteReviews()
+//   const randomReviewCount = Math.floor(Math.random() * 8) + 8;
+//   console.log("creating " + randomReviewCount + " reviews");
+//   for (let j = 0; j < randomReviewCount; j += 1) {
+//     const date = faker.date.past();
+//     const review = faker.lorem.sentences();
+//     const overall_rating = Math.floor(Math.random() * 5);
+//     const cleanliness_rating = Math.floor(Math.random() * 5);
+//     const check_in_rating = Math.floor(Math.random() * 5);
+//     const accuracy_rating = Math.floor(Math.random() * 5);
+//     const value_rating = Math.floor(Math.random() * 5);
+//     const location_rating = Math.floor(Math.random() * 5);
+//     const quick_responses = Math.round(Math.random()) === 1 ? true : false;
+//     const sparkling_clean = Math.round(Math.random()) === 1 ? true : false;
+//     const amazing_amenities = Math.round(Math.random()) === 1 ? true : false;
+//     const stylish = Math.round(Math.random()) === 1 ? true : false;
+//     const hospitality = Math.round(Math.random()) === 1 ? true : false;
+//     Models.reviews({
+//       date,
+//       review,
+//       overall_rating,
+//       cleanliness_rating,
+//       check_in_rating,
+//       accuracy_rating,
+//       value_rating,
+//       location_rating,
+//       quick_responses,
+//       sparkling_clean,
+//       amazing_amenities,
+//       stylish,
+//       hospitality
+//     });
+//   }
+// }
 
-function listings() {
-  for (let i = 1; i <= 100; i += 1) {
-    const title = faker.lorem.words();
-    const avg_rating = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const communication = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const check_in = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const location = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const accuracy = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const value = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const cleanliness = Math.floor(Math.random() * (5 * 100 - 3.5 * 100) + 3.5 * 100) / (1 * 100);
-    const hospitality = Math.floor(Math.random() * (50 - 10 + 1) + 10);
-    const stylish = Math.floor(Math.random() * (50 - 10 + 1) + 10);
-    const sparkling_clean = Math.floor(Math.random() * (50 - 10 + 1) + 10);
-    const quick_responses = Math.floor(Math.random() * (50 - 10 + 1) + 10);
-    const amazing_amenities = Math.floor(Math.random() * (50 - 10 + 1) + 10);
-    const counts = Math.floor(Math.random() * (400 - 50 + 1) + 50);
-    const owners_id = i;
-    Models.listings({
-      title,
-      avg_rating,
-      communication,
-      check_in,
-      accuracy,
-      value,
-      location,
-      cleanliness,
-      hospitality,
-      stylish,
-      sparkling_clean,
-      quick_responses,
-      amazing_amenities,
-      counts,
-      owners_id,
+const ownerResponses = async () => {
+  await Models.deleteOwnerResponses();
+  for (let i = 0; i < ownerResponseNumber; i += 1) {
+    const response = faker.lorem.sentences();
+    const date = faker.date.past();
+    await Models.ownersResponses({
+      response,
+      date
     });
   }
 }
 
-let reviewCounter = 0;
+const createData = async () => {
+  await Models.deleteReviews();
+  await Models.deleteListings();
 
-function reviews() {
-  for (let i = 1; i <= 100; i += 1) {
-    const randomReviewCount = Math.floor(Math.random() * (50 - 4 + 1) + 4);
+  // create listing
+  for (let i = 0; i < listingNumber; i++) {
+    await Models.listings({
+      title: faker.lorem.words(),
+      owners_id: Math.floor(Math.random() * ownerNumber)
+    })
+
+    const totalOverall = 0;
+    const totalCleanliness = 0;
+    const totalCheckIn = 0;
+    const totalAccuracy = 0;
+    const totalValue = 0;
+    const totalLocation = 0;
+
+    const totalQuick = 0;
+    const totalSparkling = 0;
+    const totalAmazing = 0;
+    const totalStylish = 0;
+    const totalHospitality = 0;
+
+    const randomReviewCount = Math.floor(Math.random() * 8) + 8;
+    console.log("creating " + randomReviewCount + " reviews");
     for (let j = 0; j < randomReviewCount; j += 1) {
       const date = faker.date.past();
       const review = faker.lorem.sentences();
-      const users_id = Math.floor(Math.random() * (3000) + 1);
-      const listings_id = i;
-      Models.reviews({
+
+      const overall_rating = Math.floor(Math.random() * 5);
+      totalOverall += overall_rating;
+      const cleanliness_rating = Math.floor(Math.random() * 5);
+      totalCleanliness += cleanliness_rating;
+      const check_in_rating = Math.floor(Math.random() * 5);
+      totalCheckIn += check_in_rating
+      const accuracy_rating = Math.floor(Math.random() * 5);
+      totalAccuracy += accuracy_rating;
+      const value_rating = Math.floor(Math.random() * 5);
+      totalValue += value_rating;
+      const location_rating = Math.floor(Math.random() * 5);
+      totalLocation += location_rating;
+
+      const quick_responses = Math.round(Math.random())
+      totalQuick += quick_responses;
+      const sparkling_clean = Math.round(Math.random())
+      totalSparkling += sparkling_clean; 
+      const amazing_amenities = Math.round(Math.random())
+      totalAmazing += amazing_amenities;
+      const stylish = Math.round(Math.random())
+      totalStylish += stylish;
+      const hospitality = Math.round(Math.random())
+      totalHospitality += hospitality;
+
+      const user_id = Math.floor(Math.random() * userNumber);
+      const listing_id = i;
+
+      await Models.reviews({
         date,
         review,
-        users_id,
-        listings_id,
+        overall_rating,
+        cleanliness_rating,
+        check_in_rating,
+        accuracy_rating,
+        value_rating,
+        location_rating,
+        quick_responses,
+        sparkling_clean,
+        amazing_amenities,
+        stylish,
+        hospitality,
+        user_id,
+        listing_id
       });
-      reviewCounter += 1;
     }
-  }
-}
-
-function ownerResponses() {
-  const responseCounts = reviewCounter / 5;
-  for (let i = 0; i < responseCounts; i += 1) {
-    const response = faker.lorem.sentences();
-    const date = faker.date.past();
-    const reviews_id = Math.floor(Math.random() * (reviewCounter) + 1);
-    const owners_id = Math.floor(Math.random() * (100) + 1);
-    Models.ownersResponses({
-      response,
-      date,
-      reviews_id,
-      owners_id,
-    });
+    totalOverall = (totalOverall / randomReviewCount);
+    totalCleanliness = (totalCleanliness / randomReviewCount);
+    totalCheckIn = (totalCheckIn / randomReviewCount);
+    totalAccuracy = (totalAccuracy / randomReviewCount);
+    totalValue = (totalValue / randomReviewCount);
+    totalLocation = (totalLocation / randomReviewCount);
+    await Models.updateListing({
+      totalOverall,
+      totalCleanliness,
+      totalCheckIn,
+      totalAccuracy,
+      totalValue,
+      totalLocation,
+      totalQuick,
+      totalSparkling,
+      totalAmazing,
+      totalStylish,
+      totalHospitality
+    }, i)
   }
 }
 
 users();
 owners();
-listings();
-reviews();
 ownerResponses();
+
+createData();
+// reviews();
+// listings();

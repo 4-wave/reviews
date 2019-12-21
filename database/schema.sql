@@ -36,8 +36,7 @@ CREATE TABLE IF NOT EXISTS reviews_schema.listings (
   amazing_amenities_total INT,
   stylish_total INT,
   hospitality_total INT,
-  owners_id INT,
-  FOREIGN KEY (owners_id) REFERENCES reviews_schema.owners(id)
+  owner_id INT
 );
 
 CREATE TABLE IF NOT EXISTS reviews_schema.reviews (
@@ -81,7 +80,7 @@ ADD FOREIGN KEY (owner_id)
 REFERENCES reviews_schema.owners(id);
 
 ALTER TABLE reviews_schema.listings
-ADD FOREIGN KEY (owners_id)
+ADD FOREIGN KEY (owner_id)
 REFERENCES reviews_schema.owners(id);
 
 ALTER TABLE reviews_schema.reviews
