@@ -13,7 +13,7 @@
     "build": "webpack --mode=production -w",
     "start": "nodemon --inspect server/index.js",
     "reset:db": "psql -d reviews -a -f database/schema.sql",
-    "db:setup": "psql -d reviews -a -f database/schema.sql && node database/seed.js",
+    "db:setup": "psql -d reviews -a -f database/schema.sql && node --inspect database/seed.js",
     "test": "jest --coverage"
   },
   "repository": {

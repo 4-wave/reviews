@@ -71,31 +71,42 @@ module.exports = {
       d.owner_id
     ];
 
-    const query = 'INSERT INTO reviews_schema.listings (title, owner_id) VALUES(?, ?)';
+    const query = 'INSERT INTO reviews_schema.listings (title, owner_id) VALUES($1, $2)';
 
     client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(data);
+        console.log("created listing");
       }
     });
   },
   updateListing: (d, i) => {
     const queryVal = [
       d.totalOverall,
+      d.totalCommunication,
       d.totalCleanliness,
       d.totalCheckIn,
       d.totalAccuracy,
-      d.totalValue,
       d.totalLocation,
+      d.totalValue,
       d.totalQuick,
       d.totalSparkling,
       d.totalAmazing,
       d.totalStylish,
-      d.totalHospitality,
+      d.totalHospitality
     ]
-    const query = `UPDATE reviews_schema.listings SET (overall_rating_avg, communication_rating_avg, check_in_rating_avg, accuracy_rating_avg, location_rating_avg, value_rating_avg, quick_responses_total, sparkling_clean_total, amazing_amenities_total, stylish_total, hospitality_total) VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) WHERE id = ${id}`
+    console.log(d)
+    console.log(i)
+    // let query = `UPDATE reviews_schema.listings SET overall_rating_avg = WHERE id = ${i}`
+    let query = `UPDATE reviews_schema.listings SET overall_rating_avg = ${d.totalOverall}, communication_rating_avg = ${d.totalCommunication}, cleanliness_rating_avg = ${d.totalCleanliness},check_in_rating_avg = ${d.totalCheckIn}, accuracy_rating_avg = ${d.totalAccuracy}, location_rating_avg = ${d.totalLocation}, value_rating_avg = ${d.totalValue},quick_responses_total = ${d.totalQuick}, sparkling_clean_total = ${d.totalSparkling}, amazing_amenities_total = ${d.totalAmazing}, hospitality_total = ${d.totalHospitality} WHERE id = ${i}`
+    client.query(query, (err, data) => {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(data)
+      }
+    })
   },
   deleteReviews: () => {
     client.query('DELETE FROM reviews_schema.reviews', (err, data) => {
@@ -111,6 +122,7 @@ module.exports = {
       fakeData.date,
       fakeData.review,
       fakeData.overall_rating,
+      fakeData.communication_rating,
       fakeData.cleanliness_rating,
       fakeData.check_in_rating,
       fakeData.accuracy_rating,
@@ -122,7 +134,7 @@ module.exports = {
       fakeData.stylish,
       fakeData.hospitality
     ]
-    const query = 'INSERT INTO reviews_schema.reviews (date, review, overall_rating, cleanliness_rating, check_in_rating,accuracy_rating,value_rating,location_rating,quick_responses,sparkling_clean,amazing_amenities,stylish,hospitality) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)';
+    const query = 'INSERT INTO reviews_schema.reviews (date, review, overall_rating, communication_rating, cleanliness_rating, check_in_rating,accuracy_rating,value_rating,location_rating,quick_responses,sparkling_clean,amazing_amenities,stylish,hospitality) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13, $14)';
     client.query(query, queryVal, (err, data) => {
       if (err) {
         console.log(err);

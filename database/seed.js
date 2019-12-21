@@ -3,71 +3,35 @@
 const faker = require('faker');
 const Models = require('../server/models.js');
 
-const userNumber = 100;
-const ownerNumber = 80;
-const ownerResponseNumber = 20;
-const listingNumber = 2;
+const userNumber = 1000;
+const ownerNumber = 500;
+const ownerResponseNumber = 200;
+const listingNumber = 10000;
 const users = async () => {
-  await Models.deleteUsers();
+  Models.deleteUsers();
   for (let i = 0; i < userNumber; i += 1) {
     const randomName = faker.name.firstName();
     const randomImage = faker.image.avatar();
-    await Models.users({ name: randomName, image: randomImage }, idx = i);
+    Models.users({ name: randomName, image: randomImage }, idx = i);
   }
   // Models.db.end();
 };
 
 const owners = async () =>  {
-  await Models.deleteOwners();
+  Models.deleteOwners();
   for (let i = 0; i < ownerNumber; i += 1) {
     const randomName = faker.name.firstName();
     const randomImage = faker.image.avatar();
-    await Models.owners({ name: randomName, image: randomImage }, idx = i);
+    Models.owners({ name: randomName, image: randomImage }, idx = i);
   }
 }
 
-// const reviews = () => {
-//   Models.deleteReviews()
-//   const randomReviewCount = Math.floor(Math.random() * 8) + 8;
-//   console.log("creating " + randomReviewCount + " reviews");
-//   for (let j = 0; j < randomReviewCount; j += 1) {
-//     const date = faker.date.past();
-//     const review = faker.lorem.sentences();
-//     const overall_rating = Math.floor(Math.random() * 5);
-//     const cleanliness_rating = Math.floor(Math.random() * 5);
-//     const check_in_rating = Math.floor(Math.random() * 5);
-//     const accuracy_rating = Math.floor(Math.random() * 5);
-//     const value_rating = Math.floor(Math.random() * 5);
-//     const location_rating = Math.floor(Math.random() * 5);
-//     const quick_responses = Math.round(Math.random()) === 1 ? true : false;
-//     const sparkling_clean = Math.round(Math.random()) === 1 ? true : false;
-//     const amazing_amenities = Math.round(Math.random()) === 1 ? true : false;
-//     const stylish = Math.round(Math.random()) === 1 ? true : false;
-//     const hospitality = Math.round(Math.random()) === 1 ? true : false;
-//     Models.reviews({
-//       date,
-//       review,
-//       overall_rating,
-//       cleanliness_rating,
-//       check_in_rating,
-//       accuracy_rating,
-//       value_rating,
-//       location_rating,
-//       quick_responses,
-//       sparkling_clean,
-//       amazing_amenities,
-//       stylish,
-//       hospitality
-//     });
-//   }
-// }
-
 const ownerResponses = async () => {
-  await Models.deleteOwnerResponses();
+  Models.deleteOwnerResponses();
   for (let i = 0; i < ownerResponseNumber; i += 1) {
     const response = faker.lorem.sentences();
     const date = faker.date.past();
-    await Models.ownersResponses({
+    Models.ownersResponses({
       response,
       date
     });
@@ -75,66 +39,76 @@ const ownerResponses = async () => {
 }
 
 const createData = async () => {
-  await Models.deleteReviews();
-  await Models.deleteListings();
+  users();
+  owners();
+  ownerResponses();
+  Models.deleteReviews();
+  Models.deleteListings();
 
   // create listing
   for (let i = 0; i < listingNumber; i++) {
-    await Models.listings({
+    Models.listings({
       title: faker.lorem.words(),
       owners_id: Math.floor(Math.random() * ownerNumber)
     })
 
-    const totalOverall = 0;
-    const totalCleanliness = 0;
-    const totalCheckIn = 0;
-    const totalAccuracy = 0;
-    const totalValue = 0;
-    const totalLocation = 0;
+    let totalOverall = 0;
 
-    const totalQuick = 0;
-    const totalSparkling = 0;
-    const totalAmazing = 0;
-    const totalStylish = 0;
-    const totalHospitality = 0;
+    let totalCommunication = 0;
+    let totalCleanliness = 0;
+    let totalCheckIn = 0;
+    let totalAccuracy = 0;
+    let totalValue = 0;
+    let totalLocation = 0;
 
-    const randomReviewCount = Math.floor(Math.random() * 8) + 8;
+    let totalQuick = 0;
+    let totalSparkling = 0;
+    let totalAmazing = 0;
+    let totalStylish = 0;
+    let totalHospitality = 0;
+
+    let randomReviewCount = Math.floor(Math.random() * 8) + 8;
     console.log("creating " + randomReviewCount + " reviews");
     for (let j = 0; j < randomReviewCount; j += 1) {
-      const date = faker.date.past();
-      const review = faker.lorem.sentences();
+      let date = faker.date.past();
+      let review = faker.lorem.sentences();
 
-      const overall_rating = Math.floor(Math.random() * 5);
+      // refactor this crap
+      let overall_rating = Math.floor(Math.random() * 5);
       totalOverall += overall_rating;
-      const cleanliness_rating = Math.floor(Math.random() * 5);
+
+      let communication_rating = Math.floor(Math.random() * 5);
+      totalCommunication += communication_rating;
+      let cleanliness_rating = Math.floor(Math.random() * 5);
       totalCleanliness += cleanliness_rating;
-      const check_in_rating = Math.floor(Math.random() * 5);
+      let check_in_rating = Math.floor(Math.random() * 5);
       totalCheckIn += check_in_rating
-      const accuracy_rating = Math.floor(Math.random() * 5);
+      let accuracy_rating = Math.floor(Math.random() * 5);
       totalAccuracy += accuracy_rating;
-      const value_rating = Math.floor(Math.random() * 5);
+      let value_rating = Math.floor(Math.random() * 5);
       totalValue += value_rating;
-      const location_rating = Math.floor(Math.random() * 5);
+      let location_rating = Math.floor(Math.random() * 5);
       totalLocation += location_rating;
 
-      const quick_responses = Math.round(Math.random())
+      let quick_responses = Math.round(Math.random())
       totalQuick += quick_responses;
-      const sparkling_clean = Math.round(Math.random())
+      let sparkling_clean = Math.round(Math.random())
       totalSparkling += sparkling_clean; 
-      const amazing_amenities = Math.round(Math.random())
+      let amazing_amenities = Math.round(Math.random())
       totalAmazing += amazing_amenities;
-      const stylish = Math.round(Math.random())
+      let stylish = Math.round(Math.random())
       totalStylish += stylish;
-      const hospitality = Math.round(Math.random())
+      let hospitality = Math.round(Math.random())
       totalHospitality += hospitality;
 
-      const user_id = Math.floor(Math.random() * userNumber);
-      const listing_id = i;
+      let user_id = Math.floor(Math.random() * userNumber);
+      let listing_id = i;
 
-      await Models.reviews({
+      Models.reviews({
         date,
         review,
         overall_rating,
+        communication_rating,
         cleanliness_rating,
         check_in_rating,
         accuracy_rating,
@@ -150,13 +124,15 @@ const createData = async () => {
       });
     }
     totalOverall = (totalOverall / randomReviewCount);
+    totalCommunication = (totalCommunication / randomReviewCount);
     totalCleanliness = (totalCleanliness / randomReviewCount);
     totalCheckIn = (totalCheckIn / randomReviewCount);
     totalAccuracy = (totalAccuracy / randomReviewCount);
     totalValue = (totalValue / randomReviewCount);
     totalLocation = (totalLocation / randomReviewCount);
-    await Models.updateListing({
+    Models.updateListing({
       totalOverall,
+      totalCommunication,
       totalCleanliness,
       totalCheckIn,
       totalAccuracy,
@@ -167,14 +143,8 @@ const createData = async () => {
       totalAmazing,
       totalStylish,
       totalHospitality
-    }, i)
+    }, i + 1)
   }
 }
 
-users();
-owners();
-ownerResponses();
-
 createData();
-// reviews();
-// listings();
