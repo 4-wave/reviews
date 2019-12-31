@@ -7,11 +7,7 @@ const path = require('path');
 
 const port = 3003;
 
-const couchbase = require('couchbase')
 const Controllers = require('./controllers.js');
-
-const cluster = new couchbase.Cluster('couchbase://127.0.0.1:8091//');
-cluster.authenticate('Administrator', 'password');
 
 app.use(cors());
 

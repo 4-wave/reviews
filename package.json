@@ -12,7 +12,9 @@
   "scripts": {
     "build": "webpack --mode=production -w",
     "start": "nodemon --inspect server/index.js",
+    "query:pg": "node database/pg_query.js",
     "db:setup": "psql -d reviews -a -f database/schema.sql && node --max-old-space-size=10000 database/seed.js",
+    "db:setup:couch": "node database/couchSeed.js",
     "test": "jest --coverage"
   },
   "repository": {
