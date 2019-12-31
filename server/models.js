@@ -1,167 +1,176 @@
 /* eslint-disable no-console */
 const { Pool, Client } = require('pg');
+const format = require('pg-format');
 const async = require('async');
 const db = require('../config/models.config.js');
+const Promise = require('bluebird');
 
-const client = new Client({
+const pool = new Pool({
   host: db.development.host,
   database: db.development.database
 })
-client.connect()
-
-// client.on('error', (err, client) => {
-//   console.error('unexpected error', err)
-//   process.exit(-1)
-// })
+pool.connect()
+pool.on('error', (err, pool) => {
+  console.error('unexpected error', err)
+  process.exit(-1)
+})
 
 module.exports = {
-  db: client,
+  db: pool,
   deleteUsers: () => {
-    client.query('DELETE FROM reviews_schema.users', (err, data) => {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log("USERS RESET")
-      }
+    return new Promise( (resolve, reject) => { 
+      pool.query('DELETE FROM reviews_schema.users', (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log("USERS RESET")
+          resolve()
+        }
+      })
     })
   },
-  users: (fakeUser, idx = null) => {
-    const queryVal = [fakeUser.name, fakeUser.image];
-    const query = 'INSERT INTO reviews_schema.users (name, image) VALUES($1, $2)';
-    client.query(query, queryVal, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("user successfully created ", idx);
-      }
-    });
+  users: (fakeUsers) => {
+    let query = format('INSERT INTO reviews_schema.users (name, image) VALUES %L', fakeUsers)
+    return new Promise( (resolve, reject) => { 
+      pool.query(query, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          resolve();
+        }
+      })
+    })
+
   },
   deleteOwners: () => {
-    client.query('DELETE FROM reviews_schema.owners', (err, data) => {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log("OWNERS RESET")
-      }
+    return new Promise( (resolve, reject) => { 
+      pool.query('DELETE FROM reviews_schema.owners', (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log("OWNERS RESET")
+          resolve();
+        }
+      })
     })
   },
-  owners: (fakeData, idx = null) => {
-    const queryVal = [fakeData.name, fakeData.image];
-    const query = 'INSERT INTO reviews_schema.owners (name, image) VALUES($1, $2)';
-    client.query(query, queryVal, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("owner successfully created ", idx);
-      }
-    });
+  owners: (fakeData) => {
+    const query = format('INSERT INTO reviews_schema.owners (name, image) VALUES %L returning id', fakeData)
+    return new Promise( (resolve, reject) => { 
+      pool.query(query, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          resolve()
+        }
+      });
+    })
   },
   deleteListings: () => {
-    client.query('DELETE FROM reviews_schema.listings', (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("LISTINGS RESET");
-      }
-    }) 
+    return new Promise( (resolve, reject) => {
+        pool.query('DELETE FROM reviews_schema.listings', (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("LISTINGS RESET");
+          resolve();
+        }
+      })
+    })
   },
   listings: (d) => {
-    const queryVal = [
-      d.title,
-      d.owner_id
-    ];
-
-    const query = 'INSERT INTO reviews_schema.listings (title, owner_id) VALUES($1, $2)';
-
-    client.query(query, queryVal, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("created listing");
-      }
-    });
-  },
-  updateListing: (d, i) => {
-    const queryVal = [
-      d.totalOverall,
-      d.totalCommunication,
-      d.totalCleanliness,
-      d.totalCheckIn,
-      d.totalAccuracy,
-      d.totalLocation,
-      d.totalValue,
-      d.totalQuick,
-      d.totalSparkling,
-      d.totalAmazing,
-      d.totalStylish,
-      d.totalHospitality
-    ]
-    console.log(d)
-    console.log(i)
-    // let query = `UPDATE reviews_schema.listings SET overall_rating_avg = WHERE id = ${i}`
-    let query = `UPDATE reviews_schema.listings SET overall_rating_avg = ${d.totalOverall}, communication_rating_avg = ${d.totalCommunication}, cleanliness_rating_avg = ${d.totalCleanliness},check_in_rating_avg = ${d.totalCheckIn}, accuracy_rating_avg = ${d.totalAccuracy}, location_rating_avg = ${d.totalLocation}, value_rating_avg = ${d.totalValue},quick_responses_total = ${d.totalQuick}, sparkling_clean_total = ${d.totalSparkling}, amazing_amenities_total = ${d.totalAmazing}, hospitality_total = ${d.totalHospitality} WHERE id = ${i}`
-    client.query(query, (err, data) => {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log(data)
-      }
+    let query = format(`INSERT INTO reviews_schema.listings (
+      title, 
+      owner_id, 
+      overall_rating_avg,
+      communication_rating_avg,
+      cleanliness_rating_avg,
+      check_in_rating_avg,
+      accuracy_rating_avg,
+      location_rating_avg,
+      value_rating_avg,
+      quick_responses_total,
+      sparkling_clean_total,
+      amazing_amenities_total,
+      stylish_total,
+      hospitality_total) VALUES %L`, 
+    d );
+    return new Promise( (resolve, reject) => {
+        pool.query(query, (err, data) => {
+        if (err) {
+          console.log(err);
+          reject();
+        } else {
+          console.log("its writing")
+          resolve();
+        }
+      });
     })
   },
   deleteReviews: () => {
-    client.query('DELETE FROM reviews_schema.reviews', (err, data) => {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log("REVIEWS RESET")
-      }
+    return new Promise( (resolve, reject) => {
+        pool.query('DELETE FROM reviews_schema.reviews', (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log("REVIEWS RESET")
+          resolve()
+        }
+      })
     })
   },
-  reviews: (fakeData) => {
-    const queryVal = [
-      fakeData.date,
-      fakeData.review,
-      fakeData.overall_rating,
-      fakeData.communication_rating,
-      fakeData.cleanliness_rating,
-      fakeData.check_in_rating,
-      fakeData.accuracy_rating,
-      fakeData.value_rating,
-      fakeData.location_rating,
-      fakeData.quick_responses,
-      fakeData.sparkling_clean,
-      fakeData.amazing_amenities,
-      fakeData.stylish,
-      fakeData.hospitality
-    ]
-    const query = 'INSERT INTO reviews_schema.reviews (date, review, overall_rating, communication_rating, cleanliness_rating, check_in_rating,accuracy_rating,value_rating,location_rating,quick_responses,sparkling_clean,amazing_amenities,stylish,hospitality) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13, $14)';
-    client.query(query, queryVal, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("created review");
-      }
-    });
+  reviews: (d) => {
+    const query = format(`INSERT INTO reviews_schema.reviews (
+      date, 
+      review, 
+      overall_rating, 
+      communication_rating, 
+      cleanliness_rating, 
+      check_in_rating,
+      accuracy_rating,
+      value_rating,
+      location_rating,
+      quick_responses,
+      sparkling_clean,
+      amazing_amenities,
+      stylish,
+      hospitality,
+      user_id,
+      listing_id
+      ) VALUES %L`, d);
+    return new Promise( (resolve, reject) => {
+        pool.query(query, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          resolve();
+        }
+      });
+    })
   },
   deleteOwnerResponses: () => {
-    client.query('DELETE FROM reviews_schema.reviews', (err, data) => {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log("OWNER RESPONSES RESET")
-      }
+    return new Promise( (resolve, reject) => { 
+      pool.query('DELETE FROM reviews_schema.reviews', (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log("OWNER RESPONSES RESET")
+          resolve();
+        }
+      })
     })
   },
-  ownersResponses: (fakeResponses) => {
-    const queryVal = [fakeResponses.response, fakeResponses.date];
-    const query = 'INSERT INTO reviews_schema.owners_responses (response, date) VALUES($1, $2)';
-    client.query(query, queryVal, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("created owner response");
-      }
-    });
+  ownerResponses: (fakeResponses) => {
+    const query = format('INSERT INTO reviews_schema.owners_responses (response, date) VALUES %L', fakeResponses)
+    return new Promise( (resolve, reject) => {
+        pool.query(query, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          resolve();
+        }
+      });
+    })
   },
   getListing: (callback, id) => {
     const query1 = `select * from listings where id = ${id.id}`;

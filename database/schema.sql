@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS reviews_schema.listings (
   amazing_amenities_total INT,
   stylish_total INT,
   hospitality_total INT,
-  owner_id INT
+  owner_id SERIAL
 );
 
 CREATE TABLE IF NOT EXISTS reviews_schema.reviews (
@@ -56,16 +56,16 @@ CREATE TABLE IF NOT EXISTS reviews_schema.reviews (
   amazing_amenities BOOLEAN,
   stylish BOOLEAN,
   hospitality BOOLEAN,
-  user_id INT,
-  listing_id INT
+  user_id SERIAL,
+  listing_id SERIAL
 );
 
 CREATE TABLE IF NOT EXISTS reviews_schema.users_reviews (
   id SERIAL PRIMARY KEY NOT NULL,
-  user_id INT,
-  listing_id INT,
-  review_id INT,
-  owner_id INT,
+  user_id SERIAL,
+  listing_id SERIAL,
+  review_id SERIAL,
+  owner_id SERIAL,
   FOREIGN KEY (user_id) REFERENCES reviews_schema.users(id),
   FOREIGN KEY (listing_id) REFERENCES reviews_schema.listings(id),
   FOREIGN KEY (review_id) REFERENCES reviews_schema.reviews(id),
