@@ -33,17 +33,18 @@ module.exports = {
             })
         })
     },
-    users: () => {
-        usersBucket.insert('test1', {name: "blah blah"}, (err, res) => {
-            if (err) {
-                throw err;
+    users: (data) => {
+
+        return new Promise ( (resolve, reject) => {
+            for (var i = 0; i < data.length; i++) {
+                usersBucket.insert(data[i].id, {name: data[i].name, image: data[i].image}, (err, res) => {
+                    if (err) {
+                        throw err;
+                    }
+                    resolve();
+                })
             }
-            usersBucket.get('test1', (err, res) => {
-                if (err) {
-                    throw err;
-                }
-                console.log(res.value)
-            })
+
         })
     },
     flushOwners: () => {

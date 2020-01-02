@@ -109,8 +109,8 @@ const listings = async () => {
       for (let j = 0; j < randomReviewCount; j++) {
         let date = faker.date.past();
         let review = faker.lorem.sentences();
-        let user_id = Math.floor(Math.random() * userNumber) + 1;
-        let listing_id = i;
+        let user_id = i + number;
+        let listing_id = i + number;
 
         let currentReview = {}
         reviewsCount(averages, iterateAverages, totals, iterateTotals, currentReview)
