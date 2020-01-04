@@ -34,7 +34,6 @@ module.exports = {
         })
     },
     users: (data) => {
-
         return new Promise ( (resolve, reject) => {
             for (var i = 0; i < data.length; i++) {
                 usersBucket.insert(data[i].id, {name: data[i].name, image: data[i].image}, (err, res) => {

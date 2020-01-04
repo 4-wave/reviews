@@ -95,42 +95,57 @@ const startWriting = async () => {
                             stylish_total,
                             hospitality_total) FROM '${path.resolve(__dirname, `../csvs/listings/listings${i}.csv`)}' DELIMITER ',' CSV HEADER;`, `listings seeded ${i+1}mil`))
                     }
-                    Promise.all(listingsArr)
+                Promise.all(listingsArr)
+                    .then(async () => {
+                        startListings = Date.now() - startListings
+                        console.log('finished writing listings in ' + startListings + " ms")
+                        await Models.deleteReviews();
+                
+                        console.log('starting reviews')
+                        let reviewsArr = [];
+                        let startReviews = Date.now();
+                        for (var i = 0; i < (listingNumber/batchSize); i++) {
+                            reviewsArr.push(query(`\copy reviews_schema.reviews(
+                                date, 
+                                review, 
+                                overall_rating, 
+                                communication_rating, 
+                                cleanliness_rating, 
+                                check_in_rating,
+                                accuracy_rating,
+                                location_rating,
+                                value_rating,
+                                quick_responses,
+                                sparkling_clean,
+                                amazing_amenities,
+                                stylish,
+                                hospitality,
+                                user_id,
+                                listing_id) FROM '${path.resolve(__dirname, `../csvs/reviews/reviews${i}.csv`)}' DELIMITER ',' CSV HEADER;`, `reviews seeded ${i+1}mil`))
+                        }
+                    Promise.all(reviewsArr)
                         .then(async () => {
-                            startListings = Date.now() - startListings
-                            console.log('finished writing listings in ' + startListings + " ms")
-                            await Models.deleteReviews();
-                    
-                            console.log('starting reviews')
-                            let reviewsArr = [];
-                            let startReviews = Date.now();
+                            startReviews = Date.now() - startReviews;
+                            console.log('completed reviews in ' + startReviews + " ms");
+
+                            await Models.deleteUserReviews();
+
+                            console.log('writing user_reviews')
+
+                            let userReviewsArr = [];
+                            let startUserReviews = Date.now();
                             for (var i = 0; i < (listingNumber/batchSize); i++) {
-                                reviewsArr.push(query(`\copy reviews_schema.reviews(
-                                    date, 
-                                    review, 
-                                    overall_rating, 
-                                    communication_rating, 
-                                    cleanliness_rating, 
-                                    check_in_rating,
-                                    accuracy_rating,
-                                    location_rating,
-                                    value_rating,
-                                    quick_responses,
-                                    sparkling_clean,
-                                    amazing_amenities,
-                                    stylish,
-                                    hospitality,
-                                    user_id,
-                                    listing_id) FROM '${path.resolve(__dirname, `../csvs/reviews/reviews${i}.csv`)}' DELIMITER ',' CSV HEADER;`, `reviews seeded ${i+1}mil`))
+                                userReviewsArr.push(query(`\copy reviews_schema.user_reviews(user_id, listing_id, review_id, owner_id) FROM '${path.resolve(__dirname, `../csvs/user_reviews/user_reviews${i}.csv`)}' DELIMITER ',' CSV HEADER;`, `user_reviews seeded ${i+1}mil`))
                             }
-                            Promise.all(reviewsArr)
-                                .then(() => {
-                                    startReviews = Date.now() - startReviews;
-                                    startWrite = Date.now() - startWrite;
-                                    console.log('completed listings in ' + startReviews + " ms");
-                                    console.log('completed write in ' + startWrite + " ms");
-                                })
+                        Promise.all(userReviewsArr)
+                            .then(() => {
+                                startUserReviews = Date.now() - startUserReviews;
+                                console.log('completed user_reviews in ' + startUserReviews + ' ms');
+                                startWrite = Date.now() - startWrite;
+                                console.log('completed write in ' + startWrite + " ms");
+                            })
                         })
+                    })
                 })
             })
         })

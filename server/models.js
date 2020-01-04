@@ -172,6 +172,18 @@ module.exports = {
       });
     })
   },
+  deleteUserReviews: () => {
+    return new Promise( (resolve, reject) => { 
+      pool.query('DELETE FROM reviews_schema.user_reviews', (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log("USER REVIEWS RESET")
+          resolve();
+        }
+      })
+    })
+  },
   getListing: (callback, id) => {
     const query1 = `select * from listings where id = ${id.id}`;
     const query2 = `select users.name, users.image, reviews.date, reviews.review, owners.name as ownersName, owners.image as ownersImage, owners_responses.response, owners_responses.date as ownersResponseDate from reviews join users on reviews.users_id = users.id left join owners_responses on reviews.id = owners_responses.reviews_id left join owners on owners.id = owners_responses.owners_id where reviews.listings_id = ${id.id}`;

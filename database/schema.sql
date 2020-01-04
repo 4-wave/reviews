@@ -60,16 +60,12 @@ CREATE TABLE IF NOT EXISTS reviews_schema.reviews (
   listing_id SERIAL
 );
 
-CREATE TABLE IF NOT EXISTS reviews_schema.users_reviews (
+CREATE TABLE IF NOT EXISTS reviews_schema.user_reviews (
   id SERIAL PRIMARY KEY NOT NULL,
   user_id SERIAL,
   listing_id SERIAL,
   review_id SERIAL,
-  owner_id SERIAL,
-  FOREIGN KEY (user_id) REFERENCES reviews_schema.users(id),
-  FOREIGN KEY (listing_id) REFERENCES reviews_schema.listings(id),
-  FOREIGN KEY (review_id) REFERENCES reviews_schema.reviews(id),
-  FOREIGN KEY (owner_id) REFERENCES reviews_schema.owners(id)
+  owner_id SERIAL
 );
 
 ALTER TABLE reviews_schema.owners_responses 
@@ -91,3 +87,15 @@ REFERENCES reviews_schema.listings(id);
 ALTER TABLE reviews_schema.reviews
 ADD FOREIGN KEY (user_id)
 REFERENCES reviews_schema.users(id);
+
+CREATE INDEX owner_responses_owner_id ON reviews_schema.owner_responses(owner_id);
+
+CREATE INDEX reviews_listing_id ON reviews_schema.reviews(listing_id);
+CREATE INDEX reviews_user_id ON reviews_schema.reviews(user_id);
+
+CREATE INDEX listings_owner_id ON reviews_schema.listings(owner_id);
+
+CREATE INDEX user_reviews_user_id ON reviews_schema.user_reviews(user_id);
+CREATE INDEX user_reviews_listing_id ON reviews_schema.user_reviews(listing_id);
+CREATE INDEX user_reviews_review_id ON reviews_schema.user_reviews(review_id);
+CREATE INDEX user_reviews_owner_id ON reviews_schema.user_reviews(owner_id);

@@ -12,9 +12,7 @@ const listingNumber = 10000000;
 
 const encoding = 'utf-8';
 
-
 const users = async () => {
-    await Models.deleteUsers();
     return new Promise( (resolve, reject) => {
         let number = 0
         for (var i = 0; i < (userNumber/batchSize); i++) {
@@ -35,14 +33,13 @@ const users = async () => {
 }
 
 const owners = async () => {
-    await Models.deleteOwners();
 
     return new Promise((resolve, reject) => {
         let number = 0;
         for (var j = 0; j < (ownerNumber / batchSize); j++) {
             let str = '';
             const usersFile = fs.createWriteStream(`csvs/owners/owners${j}.csv`);
-            usersFile.write('username, avatar\n', encoding);
+            usersFile.write('name, image\n', encoding);
             for (let i = 0; i < batchSize; i += 1) {
               const randomName = faker.name.firstName();
               const randomImage = faker.image.avatar();
@@ -57,7 +54,6 @@ const owners = async () => {
 }
 
 const ownerResponses = async () => {
-    await Models.deleteOwnerResponses();
 
     return new Promise((resolve, reject) => {
         let number = 0;
@@ -92,20 +88,24 @@ const reviewsCount = async (averages, iterateAverages, totals, iterateTotals, cu
   }
 
 const listings = async () => {
-    await Models.deleteListings();
-    await Models.deleteReviews();
 
     return new Promise ((resolve, reject) => {
         let number = 0;
+        let review_id = 0;
         for (let k = 0; k < (listingNumber/batchSize); k++) {
             let reviewsStr = '';
+            let userReviewsStr = '';
+
+            const userReviewsFile = fs.createWriteStream(`csvs/user_reviews/user_reviews${k}.csv`);
+            userReviewsFile.write('user_id, listing_id, review_id, owner_id\n', encoding);
+
             const reviewsFile = fs.createWriteStream(`csvs/reviews/reviews${k}.csv`);
             reviewsFile.write('date, review, overall_rating, communication_rating, cleanliness_rating, check_in_rating, accuracy_rating, location_rating, value_rating, quick_responses, sparkling_clean, amazing_amenities, stylish, hospitality, user_id, listing_id\n', encoding);
 
             let listingsStr = '';
             const listingsFile = fs.createWriteStream(`csvs/listings/listings${k}.csv`);
             listingsFile.write('title, owner_id, overall_rating_avg, communication_rating_avg, cleanliness_rating_avg, check_in_rating_avg, accuracy_rating_avg, location_rating_avg, value_rating_avg, quick_responses_total, sparkling_clean_total, amazing_amenities_total, stylish_total, hospitality_total\n', encoding);
-            for (let i = 1 ; i < batchSize; i++) {
+            for (let i = 0 ; i < batchSize; i++) {
               let averages = {
                 overall_rating: 0,
                 communication_rating: 0,
@@ -124,19 +124,22 @@ const listings = async () => {
                 stylish: 0,
                 hospitality: 0,
               }
-              let iterateTotals = Object.keys(totals)
+              let iterateTotals = Object.keys(totals);
         
               let randomReviewCount = Math.floor(Math.random() * 5) + 1;
+              let owner_id = Math.floor(Math.random() * (ownerNumber - 1)) + 1;
               
               for (let j = 0; j < randomReviewCount; j++) {
                 let date = faker.date.past();
                 let review = faker.lorem.sentences();
-                let user_id = Math.floor(Math.random() * (userNumber));
-                let listing_id = i + number;
-        
+                let user_id = Math.floor(Math.random() * (userNumber - 1)) + 1;
+                let listing_id = (i+1) + number;
+
                 let currentReview = {}
                 reviewsCount(averages, iterateAverages, totals, iterateTotals, currentReview)
                 reviewsStr += `${date},${review},${currentReview.overall_rating},${currentReview.communication_rating},${currentReview.cleanliness_rating},${currentReview.check_in_rating},${currentReview.accuracy_rating},${currentReview.location_rating},${currentReview.value_rating},${currentReview.quick_responses},${currentReview.sparkling_clean},${currentReview.amazing_amenities},${currentReview.stylish},${currentReview.hospitality},${user_id},${listing_id}\n`
+                userReviewsStr += `${user_id}, ${listing_id}, ${review_id}, ${owner_id}\n`
+                review_id++;
               }
 
               if (randomReviewCount !== 0) {
@@ -157,14 +160,15 @@ const listings = async () => {
                 averageLocation = 0;
 
               }
-              listingsStr += `${faker.lorem.words()}, ${Math.floor(Math.random() * ownerNumber) + 1},${averageOverall},${averageCommunication},${averageCleanliness},${averageCheckIn},${averageAccuracy},${averageValue},${averageLocation},${totals.quick_responses},${totals.sparkling_clean},${totals.amazing_amenities},${totals.stylish},${totals.hospitality}\n`
+              listingsStr += `${faker.lorem.words()},${owner_id},${averageOverall},${averageCommunication},${averageCleanliness},${averageCheckIn},${averageAccuracy},${averageValue},${averageLocation},${totals.quick_responses},${totals.sparkling_clean},${totals.amazing_amenities},${totals.stylish},${totals.hospitality}\n`
             }
             reviewsFile.write(reviewsStr, encoding)
             listingsFile.write(listingsStr, encoding)
+            userReviewsFile.write(userReviewsStr, encoding)
             number = number + batchSize;
             console.log(number)
         }
-        resolve ();
+        resolve();
     })
 }
 
@@ -177,7 +181,6 @@ users().then(() => {
             console.log('finished with owner_responses, beginning reviews and listings')
             listings().then(() => {
                 console.log('finished with csvs')
-                return;
             })
         })
     })

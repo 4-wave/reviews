@@ -11,7 +11,7 @@ pool.on('error', (err, pool) => {
     process.exit(-1)
 })
 
-let q = `SELECT * FROM reviews_schema.reviews WHERE listing_id = 1234`;
+let q = `SELECT * FROM reviews_schema.reviews WHERE listing_id = 999999`;
 console.log('query to find all the reviews for listing of id 12345');
 let t0 = Date.now()
 pool.query(q, (err, res) => {

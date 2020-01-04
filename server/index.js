@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+require('newrelic');
 const express = require('express');
 const cors = require('cors');
 
