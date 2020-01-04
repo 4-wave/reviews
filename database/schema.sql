@@ -14,12 +14,12 @@ CREATE TABLE IF NOT EXISTS reviews_schema.owners (
   image VARCHAR(100)
 );
 
-CREATE TABLE IF NOT EXISTS reviews_schema.owners_responses (
+CREATE TABLE IF NOT EXISTS reviews_schema.owner_responses (
   id SERIAL PRIMARY KEY NOT NULL,
   response VARCHAR(2000),
   review_id INT,
   owner_id INT,
-  date VARCHAR(45)
+  date VARCHAR(60)
 );
 
 CREATE TABLE IF NOT EXISTS reviews_schema.listings (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS reviews_schema.listings (
 
 CREATE TABLE IF NOT EXISTS reviews_schema.reviews (
   id SERIAL PRIMARY KEY NOT NULL,
-  date VARCHAR(45),
+  date VARCHAR(60),
   review VARCHAR(2000),
   overall_rating INT,
   cleanliness_rating INT,

@@ -14,7 +14,8 @@
     "start": "nodemon --inspect server/index.js",
     "query:pg": "node database/pg_query.js",
     "query:couch": "node database/couch_query.js",
-    "db:setup": "psql -d reviews -a -f database/schema.sql && node --max-old-space-size=10000 database/seed.js",
+    "db:setup:pg_csv": "node --max-old-space-size=10240 database/seed-csv.js",
+    "db:setup:write_pg": "psql -d reviews -a -f database/schema.sql && node --max-old-space-size=10240 database/write_pg.js",
     "db:setup:couch": "node database/couchSeed.js",
     "test": "jest --coverage"
   },
