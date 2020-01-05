@@ -15,12 +15,11 @@ const listingsManager = listingsBucket.manager();
 const reviewsBucket = cluster.openBucket('reviews');
 const reviewsManager = reviewsBucket.manager();
 
-const ownerResponses = cluster.openBucket('owners_responses');
+const ownerResponses = cluster.openBucket('owner_responses');
 const responsesManager = ownerResponses.manager();
 
 module.exports = {
     flushUsers: () => {
-        let del = couchbase.N1qlQuery.fromString('DELETE FROM users');
         return new Promise( (resolve, reject) => {
             usersManager.flush( (err, status) => {
                 if (status) {
@@ -47,7 +46,6 @@ module.exports = {
         })
     },
     flushOwners: () => {
-        let del = couchbase.N1qlQuery.fromString('DELETE FROM owners');
         return new Promise( (resolve, reject) => {
             ownersManager.flush( (err, status) => {
                 if (status) {
@@ -60,17 +58,17 @@ module.exports = {
             })
         })
     },
-    owners: () => {
-        ownersBucket.insert('test2', {name: "blah blah"}, (err, res) => {
-            if (err) {
-                throw err;
+    owners: (data) => {
+        return new Promise ( (resolve, reject) => {
+            for (var i = 0; i < data.length; i++) {
+                ownersBucket.insert(data[i].id, {name: data[i].name, image: data[i].image}, (err, res) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve();
+                })
             }
-            ownersBucket.get('test2', (err, res) => {
-                if (err) {
-                    throw err;
-                }
-                console.log(res.value)
-            })
+
         })
     },
     flushListings: () => {
@@ -86,21 +84,35 @@ module.exports = {
             })
         })
     },
-    listings: () => {
-        listingsBucket.insert('test1', {name: "blah blah"}, (err, res) => {
-            if (err) {
-                throw err;
+    listings: (data) => {
+        return new Promise ( (resolve, reject) => {
+            for (var i = 0 ; i < data.length; i++){
+                listingsBucket.insert(data[i].id, {
+                    title: data[i].title,
+                    owner_id: data[i].owner_id,
+                    overall_rating_avg: data[i].overall_rating_avg,
+                    communication_rating_avg: data[i].communication_rating_avg,
+                    cleanliness_rating_avg: data[i].cleanliness_rating_avg,
+                    check_in_rating_avg: data[i].check_in_rating_avg,
+                    accuracy_rating_avg: data[i].accuracy_rating_avg,
+                    location_rating_avg: data[i].location_rating_avg,
+                    value_rating_avg: data[i].value_rating_avg,
+                    quick_responses_total: data[i].quick_responses_total, 
+                    sparkling_clean_total: data[i].sparkling_clean_total,
+                    amazing_amenities_total: data[i].amazing_amenities_total,
+                    stylish_total: data[i].stylish_total,
+                    hospitality_total: data[i].hospitality_total
+                }, (err, res) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve();
+                })
             }
-            listingsBucket.get('test1', (err, res) => {
-                if (err) {
-                    throw err;
-                }
-                console.log(res.value)
-            })
+
         })
     },
     flushReviews: () => {
-        let del = couchbase.N1qlQuery.fromString('DELETE FROM reviews');
         return new Promise( (resolve, reject) => {
             reviewsManager.flush( (err, status) => {
                 if (status) {
@@ -139,17 +151,17 @@ module.exports = {
             })
         })
     },
-    ownerResponses: () => {
-        ownerResponses.insert('test1', {name: "blah blah"}, (err, res) => {
-            if (err) {
-                throw err;
+    ownerResponses: (data) => {
+        return new Promise ( (resolve, reject) => {
+            for (var i = 0; i < data.length; i++) {
+                ownerResponses.insert(data[i].id, {response: data[i].response, date: data[i].date}, (err, res) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve();
+                })
             }
-            ownerResponses.get('test1', (err, res) => {
-                if (err) {
-                    throw err;
-                }
-                console.log(res.value)
-            })
+
         })
     },
 }
