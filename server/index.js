@@ -20,8 +20,9 @@ app.get('/', (req, res) => {
   res.send('hello from server');
 });
 
-app.get('/api/listing/:id', (req, res) => {
-  Controllers.getListing(req.params, res);
+app.get('/test', (req, res) => {
+  let id = 1234;
+  Controllers.getListing(id, res);
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
