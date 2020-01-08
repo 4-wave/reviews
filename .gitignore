@@ -1,3 +1,7 @@
 node_modules
 config
 csvs
+
+*.dump
+*.log
+newrelic_agent.log
