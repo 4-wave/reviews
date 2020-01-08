@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "webpack --mode=production -w",
-    "start": "nodemon --inspect server/index.js",
+    "start:dev": "nodemon --inspect server/index.js",
+    "start": "node server/index.js",
     "query:pg": "node database/pg_query.js",
     "query:couch": "node database/couch_query.js",
     "db:setup:pg_csv": "node --max-old-space-size=10240 database/seed-csv.js",
