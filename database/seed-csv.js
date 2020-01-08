@@ -1,13 +1,13 @@
 const faker = require('faker');
-const Models = require('../server/models.js');
+const Models = require('../server/seedModels.js');
 
 const fs = require('fs');
 
 const batchSize =  1000000;
-const userNumber = 10000000;
+const userNumber = 5000000;
 
-const ownerNumber = 8000000;
-const ownerResponseNumber = 7000000;
+const ownerNumber = 3000000;
+const ownerResponseNumber = 1000000;
 const listingNumber = 10000000;
 
 const encoding = 'utf-8';
@@ -62,7 +62,7 @@ const ownerResponses = async () => {
             const usersFile = fs.createWriteStream(`csvs/owner_responses/owner_responses${j}.csv`);
             usersFile.write('response, date\n', encoding);
             for (let i = 0; i < batchSize; i += 1) {
-              const response = faker.lorem.sentences();
+              const response = faker.lorem.words();
               const date = faker.date.past();
               str += `${response}, ${date}\n`;
             }
@@ -131,7 +131,7 @@ const listings = async () => {
               
               for (let j = 0; j < randomReviewCount; j++) {
                 let date = faker.date.past();
-                let review = faker.lorem.sentences();
+                let review = faker.lorem.words();
                 let user_id = Math.floor(Math.random() * (userNumber - 1)) + 1;
                 let listing_id = (i+1) + number;
 

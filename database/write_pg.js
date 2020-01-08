@@ -2,13 +2,13 @@ const db = require('../config/models.config.js');
 const Promise = require('bluebird');
 const { Pool, Client } = require('pg');
 const path = require('path');
-const Models = require('../server/models.js');
+const Models = require('../server/seedModels.js');
 
 const batchSize =  1000000;
-const userNumber = 10000000;
+const userNumber = 5000000;
 
-const ownerNumber = 8000000;
-const ownerResponseNumber = 7000000;
+const ownerNumber = 3000000;
+const ownerResponseNumber = 1000000;
 const listingNumber = 10000000;
 
 const pool = new Pool({

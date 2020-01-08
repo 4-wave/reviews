@@ -57,6 +57,7 @@ class App extends React.Component {
     }
     axios.get(url)
       .then((results) => {
+        console.log(results)
         const reviewsLength = results.data.reviews.length;
         const totalPage = Math.ceil(reviewsLength / 7);
         const max = totalPage * 7;
@@ -67,8 +68,9 @@ class App extends React.Component {
           showNext = true;
         }
         this.setState({
-          listing: results.data.stats[0],
+          listing: results.data.listing[0],
           reviews: results.data.reviews,
+          count: reviewsLength,
           renderedReviews: results.data.reviews.slice(0, 7),
           max,
           showNext,
@@ -140,10 +142,10 @@ class App extends React.Component {
   }
 
   render() {
-    const { listing, showBack, showNext } = this.state;
+    const { listing, showBack, showNext, count } = this.state;
     return (
       <div>
-        <Stats listing={listing} />
+        <Stats listing={listing} count={count} />
         <Search handleSearch={this.handleSearch} />
         <Reviews reviews={this.filterBySearchedTerm()} />
         <Center>

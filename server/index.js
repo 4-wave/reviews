@@ -21,8 +21,25 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/listing/:id', (req, res) => {
-  Controllers.getListing(req.params, res);
+  Controllers.getData(req.params.id, res)
+})
+
+app.get('/getReviews', (req, res) => {
+  let id = 1234;
+  Controllers.getReviews(id, res);
 });
+
+app.post('/createReview', (req, res) => {
+  Controllers.createReview(req.body, res)
+})
+
+app.delete('/deleteReview', (req, res) => {
+  Controllers.deleteReview(id, res)
+})
+
+app.put('/updateReview', (req, res) => {
+  Controllers.updateReview(id, res)
+})
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

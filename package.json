@@ -59,6 +59,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "artillery": "^1.6.0-29",
     "babel-eslint": "^10.0.3",
     "bluebird": "^3.7.2",
     "couchbase": "^2.6.9",

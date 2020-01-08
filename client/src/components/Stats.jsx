@@ -72,10 +72,11 @@ const InnerContainer = styled.div`
 
 const Stats = ({
   listing: {
-    avg_rating, communication, cleanliness,
-    hospitality, stylish, sparkling_clean, quick_responses,
-    amazing_amenities, counts, check_in, accuracy, value, location,
+    overall_rating_avg, communication_rating_avg, cleanliness_rating_avg,
+    hospitality_total, stylish_total, sparkling_clean_total, quick_responses_total,
+    amazing_amenities_total, check_in_rating_avg, accuracy_rating_avg, value_rating_avg, location_rating_avg,
   },
+  count: count
 }) => (
   <WrappReviews>
     <Reviews>Reviews</Reviews>
@@ -84,7 +85,7 @@ const Stats = ({
         <div>
           <IoMdStar />
           <NumFont>
-            {avg_rating}
+            {overall_rating_avg}
           </NumFont>
         </div>
         <HorBarColor>
@@ -92,7 +93,7 @@ const Stats = ({
         </HorBarColor>
         <div>
           <NumFont>
-            {counts}
+            {count}
             &nbsp;
           </NumFont>
             Reviews
@@ -107,7 +108,7 @@ const Stats = ({
           &nbsp;
           &nbsp;
           <NumFont>
-            {check_in}
+            {check_in_rating_avg}
           </NumFont>
         </div>
         <div>Accuracy </div>
@@ -116,7 +117,7 @@ const Stats = ({
           &nbsp;
           &nbsp;
           <NumFont>
-            {accuracy}
+            {accuracy_rating_avg}
           </NumFont>
         </div>
         <div>Communication </div>
@@ -125,7 +126,7 @@ const Stats = ({
           &nbsp;
           &nbsp;
           <NumFont>
-            {communication}
+            {communication_rating_avg}
           </NumFont>
         </div>
         <div>Cleanliness </div>
@@ -134,7 +135,7 @@ const Stats = ({
           &nbsp;
           &nbsp;
           <NumFont>
-            {cleanliness}
+            {cleanliness_rating_avg}
           </NumFont>
         </div>
         <div>Location </div>
@@ -143,7 +144,7 @@ const Stats = ({
           &nbsp;
           &nbsp;
           <NumFont>
-            {location}
+            {location_rating_avg}
           </NumFont>
         </div>
         <div>Value </div>
@@ -152,7 +153,7 @@ const Stats = ({
           &nbsp;
           &nbsp;
           <NumFont>
-            {value}
+            {value_rating_avg}
           </NumFont>
         </div>
       </InnerContainer>
@@ -162,35 +163,35 @@ const Stats = ({
         <div>
             🛋
           <NumFont>
-            {stylish}
+            {stylish_total}
           </NumFont>
         </div>
         <div>Quick responses </div>
         <div>
            💬
           <NumFont>
-            {quick_responses}
+            {quick_responses_total}
           </NumFont>
         </div>
         <div>Sparkling clean </div>
         <div>
           🛁
           <NumFont>
-            {sparkling_clean}
+            {sparkling_clean_total}
           </NumFont>
         </div>
         <div>Amazing amenities </div>
         <div>
           ☕️
           <NumFont>
-            {amazing_amenities}
+            {amazing_amenities_total}
           </NumFont>
         </div>
         <div>Outstanding hospitality</div>
         <div>
           ♥️
           <NumFont>
-            {hospitality}
+            {hospitality_total}
           </NumFont>
         </div>
       </InnerContainer>
