@@ -1,13 +1,21 @@
 const Models = require('./queryModels.js');
 
 module.exports = {
-  getReview: (id, res) => {
+  getData: (id, res) => {
     Models.getReview((err, data) => {
       if (err) {
         res.status(400).send(JSON.stringify(data.rows))
       } else {
-        debugger
-        res.status(200).send(JSON.stringify(data.rows))
+        Models.getListing((err, data2) => {
+          if (err) {
+            res.status(400).send(JSON.stringify(data.rows));
+          } else {
+            let obj = {}
+            obj["reviews"] = data.rows
+            obj["listing"] = data2.rows
+            res.status(200).send(JSON.stringify(obj))
+          }
+        }, id)
       }
     }, id)
   },

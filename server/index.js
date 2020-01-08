@@ -21,8 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/listing/:id', (req, res) => {
-  let id = 1234
-  Controllers.getReview(id, res)
+  Controllers.getData(req.params.id, res)
 })
 
 app.get('/getReviews', (req, res) => {

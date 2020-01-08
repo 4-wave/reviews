@@ -17,7 +17,17 @@ pool.on('connect', (client) => {
 
 module.exports = {
     getReview: (callback, id) => {
-        const q = `select users.name, users.image, reviews.date, reviews.review, owners.name, owners.image, owner_responses.response from user_reviews join users on user_reviews.user_id = users.id left join reviews on user_reviews.review_id = reviews.id left join owners on user_reviews.owner_id = owners.id left join owner_responses on owners.id = owner_responses.owner_id where user_reviews.listing_id = 124;`
+        const q = `SELECT users.name, users.image, reviews.date, reviews.review, owners.name as ownersName, owners.image as ownersImage, owner_responses.response as ownerResponse, owner_responses.date as ownerResponseDate from user_reviews left join users on user_reviews.user_id = users.id left join reviews on user_reviews.review_id = reviews.id left join owners on user_reviews.owner_id = owners.id left join owner_responses on owners.id = owner_responses.owner_id where user_reviews.listing_id = ${id};`
+        pool.query(q, (err, results) => {
+            if (err) {
+                console.log(err)
+            } else {
+                callback(null, results)
+            }
+        })
+    },
+    getListing: (callback, id) => {
+        const q = `select * from listings where id = ${id}`
         pool.query(q, (err, results) => {
             if (err) {
                 console.log(err)
