@@ -57,6 +57,7 @@ class App extends React.Component {
     }
     axios.get(url)
       .then((results) => {
+        console.log(results)
         const reviewsLength = results.data.reviews.length;
         const totalPage = Math.ceil(reviewsLength / 7);
         const max = totalPage * 7;

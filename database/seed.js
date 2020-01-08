@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/no-extraneous-dependencies */
 const faker = require('faker');
-const Models = require('../server/models.js');
+const Models = require('../server/seedModels.js');
 
 const batchSize =  500000;
 const userNumber = 10000000;

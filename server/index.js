@@ -20,10 +20,27 @@ app.get('/', (req, res) => {
   res.send('hello from server');
 });
 
-app.get('/test', (req, res) => {
+app.get('/api/listing/:id', (req, res) => {
+  let id = 1234
+  Controllers.getReview(id, res)
+})
+
+app.get('/getReviews', (req, res) => {
   let id = 1234;
-  Controllers.getListing(id, res);
+  Controllers.getReviews(id, res);
 });
+
+app.post('/createReview', (req, res) => {
+  Controllers.createReview(req.body, res)
+})
+
+app.delete('/deleteReview', (req, res) => {
+  Controllers.deleteReview(id, res)
+})
+
+app.put('/updateReview', (req, res) => {
+  Controllers.updateReview(id, res)
+})
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

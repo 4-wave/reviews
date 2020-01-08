@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS reviews_schema.owners (
 
 CREATE TABLE IF NOT EXISTS reviews_schema.owner_responses (
   id SERIAL PRIMARY KEY NOT NULL,
-  response VARCHAR(2000),
+  response VARCHAR(100),
   review_id INT,
   owner_id INT,
   date VARCHAR(60)
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS reviews_schema.listings (
 CREATE TABLE IF NOT EXISTS reviews_schema.reviews (
   id SERIAL PRIMARY KEY NOT NULL,
   date VARCHAR(60),
-  review VARCHAR(2000),
+  review VARCHAR(100),
   overall_rating INT,
   cleanliness_rating INT,
   communication_rating INT,

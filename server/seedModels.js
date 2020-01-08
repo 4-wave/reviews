@@ -183,19 +183,6 @@ module.exports = {
         }
       })
     })
-  },
-  getListing: (callback, id) => {
-    // const query1 = `select * from listings where id = 123`;
-    const query1 = `select review from reviews_schema.reviews where listing_id = ${id}`
-    // const query2 = `select users.name, users.image, reviews.date, reviews.review, owners.name as ownersName, owners.image as ownersImage, owners_responses.response, owners_responses.date as ownersResponseDate from reviews join users on reviews.users_id = users.id left join owners_responses on reviews.id = owners_responses.reviews_id left join owners on owners.id = owners_responses.owners_id where reviews.listings_id = ${id.id}`;
-    const returnedData = {};
-    pool.query(query1, (err, results) => {
-      if (err) {
-        console.log(err)
-      } else {
-        callback(null, results)
-      }
-    });
   }
 }
   //   async.parallel([(parallelDone) => {
