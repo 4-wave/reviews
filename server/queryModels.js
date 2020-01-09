@@ -1,9 +1,13 @@
 const { Pool, Client } = require('pg');
-const db = require('../config/models.config.js');
+const path = require('path');
+const db = require(path.resolve(__dirname, '../config/models.config.js'));
+const format = require('pg-format');
 
 const pool = new Pool({
-    host: db.development.host,
-    database: db.development.database
+    host: db[process.env.NODE_ENV].host,
+    database: db[process.env.NODE_ENV].database,
+    user: db[process.env.NODE_ENV].user,
+    password: db[process.env.NODE_ENV].password
 })
 pool.connect()
 pool.on('error', (err, pool) => {
@@ -37,7 +41,7 @@ module.exports = {
         })
     },
     getReviews: (callback, id) => {
-        const q = `select review from reviews_schema.reviews where listing_id = ${id}`
+        const q = `select * from user_reviews left join reviews on user_reviews.review_id = reviews.id where user_reviews.listing_id = ${id}`
         pool.query(q, (err, results) => {
             if (err) {
                 console.log(err)
@@ -47,7 +51,7 @@ module.exports = {
         });
     },
     deleteReview: (callback, id) => {
-        const q = ``;
+        const q = `DELETE FROM reviews WHERE id = (SELECT id FROM reviews where listing_id = 134 ORDER BY id desc limit 1)`;
         pool.query(q, (err, results) => {
             if (err) {
                 console.log(err)
@@ -57,7 +61,24 @@ module.exports = {
         })
     },
     createReview: (callback, data) => {
-        const q = ``;
+        const q = format(`INSERT INTO reviews (
+            date, 
+            review, 
+            overall_rating, 
+            communication_rating, 
+            cleanliness_rating, 
+            check_in_rating,
+            accuracy_rating,
+            value_rating,
+            location_rating,
+            quick_responses,
+            sparkling_clean,
+            amazing_amenities,
+            stylish,
+            hospitality,
+            user_id,
+            listing_id
+            ) VALUES %L`, data)
         pool.query(q, (err, results) => {
             if (err) {
                 console.log(err)
@@ -66,8 +87,8 @@ module.exports = {
             }
         })
     },
-    updateReview: (callback, id) => {
-        const q = ``;
+    updateReview: (callback, id, data) => {
+        const q = `UPDATE reviews SET review = ${data} FROM reviews WHERE id = (SELECT id FROM reviews where listing_id = ${id} ORDER BY id desc limit 1)`;
         pool.query(q, (err, results) => {
             if (err) {
                 console.log(err)

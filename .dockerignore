@@ -1,0 +1,4 @@
+node_modules
+csvs
+*.dump
+*.DS_Store
