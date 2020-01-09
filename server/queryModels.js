@@ -1,5 +1,6 @@
 const { Pool, Client } = require('pg');
-const db = require('../config/models.config.js');
+const path = require('path');
+const db = require(path.resolve(__dirname, '../config/models.config.js'));
 const format = require('pg-format');
 
 const pool = new Pool({
