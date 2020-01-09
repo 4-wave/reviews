@@ -21,7 +21,7 @@ pool.on('connect', (client) => {
 
 module.exports = {
     getReview: (callback, id) => {
-        const q = `SELECT users.name, users.image, reviews.date, reviews.review, owners.name as ownersName, owners.image as ownersImage, owner_responses.response as ownerResponse, owner_responses.date as ownerResponseDate from user_reviews left join users on user_reviews.user_id = users.id left join reviews on user_reviews.review_id = reviews.id left join owners on user_reviews.owner_id = owners.id left join owner_responses on owners.id = owner_responses.owner_id where user_reviews.listing_id = ${id};`
+        const q = `SELECT users.name, users.image, reviews.date, reviews.review, owners.name as ownersName, owners.image as ownersImage, owner_responses.response as ownerResponse, owner_responses.date as ownerResponseDate from user_reviews inner join users on user_reviews.user_id = users.id inner join reviews on user_reviews.review_id = reviews.id inner join owners on user_reviews.owner_id = owners.id inner join owner_responses on owners.id = owner_responses.owner_id where user_reviews.listing_id = ${id};`
         pool.query(q, (err, results) => {
             if (err) {
                 console.log(err)
