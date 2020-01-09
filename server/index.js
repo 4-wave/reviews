@@ -1,7 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-require('newrelic');
+// require('newrelic');
 const express = require('express');
 const cors = require('cors');
+const faker = require('faker');
 
 const app = express();
 const path = require('path');
@@ -21,7 +22,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/listing/:id', (req, res) => {
-  Controllers.getData(req.params.id, res)
+  let id = (Math.random() * 10000000)
+  Controllers.getData(id, res)
 })
 
 app.get('/getReviews', (req, res) => {
@@ -30,7 +32,25 @@ app.get('/getReviews', (req, res) => {
 });
 
 app.post('/createReview', (req, res) => {
-  Controllers.createReview(req.body, res)
+  let arr = [[
+    faker.date.past(),
+    (faker.lorem.words()),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random() * 3) + 2),
+    (Math.round(Math.random()) === 1),
+    (Math.round(Math.random()) === 1),
+    (Math.round(Math.random()) === 1),
+    (Math.round(Math.random()) === 1),
+    (Math.round(Math.random()) === 1),
+    (Math.round(Math.random() * 5000000)),
+    (Math.round(Math.random() * 10000000))
+  ]]
+  Controllers.createReview(arr, res)
 })
 
 app.delete('/deleteReview', (req, res) => {
