@@ -31,9 +31,11 @@ module.exports = {
   createReview: (data, res) => {
     Models.createReview((err, data) => {
       if (err) {
-        res.status(400).send(JSON.stringify(data.rows))
+        console.log("aasdfasdfa")
+        res.status(400).send("asdf")
       } else {
-        res.status(200).send(JSON.stringify(data.rows))
+        console.log("SUCCESS!")
+        res.status(200).send("fff")
       }
     }, data)
   },

@@ -78,11 +78,13 @@ module.exports = {
             hospitality,
             user_id,
             listing_id
-            ) VALUES %L`, data)
+            ) VALUES %L`, data);
         pool.query(q, (err, results) => {
             if (err) {
+                console.log("error")
                 console.log(err)
             } else {
+                console.log("sicc")
                 callback(null, results)
             }
         })
